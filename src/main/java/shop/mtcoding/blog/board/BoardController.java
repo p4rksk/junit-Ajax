@@ -25,6 +25,7 @@ public class BoardController {
 
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id) {
+        //업데이트 페이지 데이터는 request에 담아서 들고 가시오.
         return "board/updateForm";
     }
 

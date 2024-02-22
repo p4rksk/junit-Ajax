@@ -17,6 +17,17 @@ public class BoardRepositoryTest {
     @Autowired // Test에서 DI 하는 코드
     private BoardRepository boardRepository;
 
+    //@Test
+    //public void insert_test(){//테스트 메서드는 파라미터가 없다. 리턴도 없다.
+    //    //given
+//
+    //    //when
+//
+    //    //then
+//
+
+
+
     @Test
     public void selectAll_test(){
         // given
