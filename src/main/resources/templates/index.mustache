@@ -1,9 +1,5 @@
 {{> layout/header}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <div class="container p-5">
-
     <table class="table table-striped">
         <thead>
         <tr>
@@ -14,14 +10,23 @@
             <th></th>
         </tr>
         </thead>
-        <tbody id ="board-box">
-
+        <tbody id="board-box">
         </tbody>
     </table>
-
 </div>
-
 <script>
+    function del(boardId) {
+        $.ajax({
+            url: `/api/boards/${boardId}`,
+            type: "delete"
+        }).done((res) => {
+            $(`#board-${boardId}`).remove();
+        }).fail((res) => {
+            alert(res.responseJSON.msg);
+            location.reload(); // 강제 f5
+        });
+    }
+    // 아래의 ajax는 무조건 실행되어야 하니까 밖에 있다
     $.ajax({
         url: "/api/boards",
         type: "get"
@@ -29,36 +34,33 @@
         console.log("통신 성공");
         console.log(res);
         // 통신이 성공하면 res에 있는 값을 화면에 뿌려야 해.
-
-        let boardList = res.body;
-
-        boardList.forEach((board)=>{
+        let boardList = res.body; // 통신 성공했을 때 바디 값을 받아서
+        boardList.forEach((board) => {
             $("#board-box").append(render(board));
-        });
+        }) // 포문 돌림
     }).fail((res) => {
         // console.log("통신 실패");
         // console.log(res); // 콘솔.로그를 찍어서 res에 뭐가 들어있는지 확인해보자.
         alert(res.responseJSON.msg);
         // 로그인이 되지 않았다면? 로그인폼을 보여줘야 하잖아.
-        location.href="/loginForm";
+        location.href = "/loginForm";
     }); // 200 떨어지면 done, 200이 아니면 fail로 감. 첫 번째 res는 바디데이터, 두 번째 res는 에러메시지
-
     function render(board) {
         return `<tr id="board-${board.id}">
-            <td>${board.id}</td>
-            <td>${board.title}</td>
-            <td>${board.content}</td>
-            <td>${board.Author}</td>
-            <td>
-                <div class="d-flex">
-                    <button ontclick="del(${board.id})"class="btn btn-danger">삭제</button>
-                    <form action="/board/${board.id}/updateForm" method="get">
-                        <button class="btn btn-warning">수정</button>
-                    </form>
-                </div>
-            </td>
-        </tr>`;
+                    <td>${board.id}</td>
+                    <td>${board.title}</td>
+                    <td>${board.content}</td>
+                    <td>${board.author}</td>
+                    <td>
+                        <div class="d-flex">
+                                <button onclick = "del(${board.id})" class="btn btn-danger">삭제</button>
+                                <form action="/board/${board.id}/updateForm" method="get">
+                                <button class="btn btn-warning">수정</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+        `;
     }
 </script>
-
 {{> layout/footer}}
