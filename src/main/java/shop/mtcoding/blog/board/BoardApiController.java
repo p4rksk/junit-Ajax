@@ -11,6 +11,13 @@ import java.util.List;
 public class BoardApiController { // Ajax 통신을 위한 컨트롤러
     private final BoardRepository boardRepository;
 
+
+    @PutMapping("/api/boards/{id}")
+    public ApiUtil<?>Update(@PathVariable Integer id, @RequestBody BoardRequest.UpdateDTO requestDTO){
+        boardRepository.update(requestDTO,id);
+        return new ApiUtil<>(null);
+    }
+
     @PostMapping("/api/boards")
     public ApiUtil<?> write(@RequestBody BoardRequest.WriteDTO requestDTO){
         boardRepository.insert(requestDTO);
